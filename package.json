@@ -2,13 +2,14 @@
     "name": "@segma/vue-components",
     "version": "0.1.0",
     "description": "vue component collection of segma frontend team",
-    "main": "dist/vue-components.common.js",
+    "main": "dist/index.cjs.js",
+    "module": "dist/index.esm.js",
     "files": [
         "dist"
     ],
     "scripts": {
         "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build --target lib --name vue-components ./src/components/index.js",
+        "build": "rollup --config",
         "lint": "vue-cli-service lint"
     },
     "dependencies": {
@@ -30,6 +31,8 @@
         "less": "^3.12.2",
         "less-loader": "^6.2.0",
         "lint-staged": "^10.2.11",
+        "rollup": "^2.26.5",
+        "rollup-plugin-vue": "^5.1.9",
         "vue-template-compiler": "^2.6.12"
     },
     "gitHooks": {

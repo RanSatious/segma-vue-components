@@ -7,7 +7,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-// todo
 .hello-world {
     color: red;
 }
