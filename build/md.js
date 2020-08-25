@@ -30,7 +30,7 @@ function renderTable(data, title, columns) {
                 total += '|';
             }
 
-            let content = (prop[current] || '-').replace(/\n/g, '<br/>');
+            let content = (prop[current] || '-').toString().replace(/\n/g, '<br/>');
             total += ` ${content} |`;
             return total;
         }, '');

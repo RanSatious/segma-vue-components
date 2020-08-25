@@ -63,7 +63,7 @@ function parseComponent(rawContent) {
         },
         CallExpression(path) {
             const { arguments: args, callee } = path.node;
-            if (callee.object.type === 'ThisExpression' && callee.property.name === '$emit') {
+            if (callee.object && callee.object.type === 'ThisExpression' && callee.property.name === '$emit') {
                 let name = args[0].value;
                 let event = component.events.find(d => d.name === name);
                 if (!event) {
