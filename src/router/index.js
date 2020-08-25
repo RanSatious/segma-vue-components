@@ -22,7 +22,7 @@ const routes = [
             {
                 path: '/hello-world',
                 name: 'helloWorld',
-                component: () => import('../views/HelloWorld.vue'),
+                component: () => import('../views/hello-world/Index.vue'),
                 meta: {
                     title: 'Hello World',
                 },
