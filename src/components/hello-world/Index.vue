@@ -1,5 +1,8 @@
 <template>
-    <div class="hello-world">{{msg}}</div>
+    <div class="hello-world"
+         @click="test">
+        {{ msg }}
+    </div>
 </template>
 <script>
 export default {
@@ -8,6 +11,14 @@ export default {
         msg: {
             type: String,
             default: 'hello world',
+        },
+    },
+    mounted() {
+        this.$emit('test');
+    },
+    methods: {
+        test() {
+            console.log('test');
         },
     },
 };

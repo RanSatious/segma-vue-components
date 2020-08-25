@@ -1,6 +1,7 @@
 <template>
     <div class="home">
-        <img alt="Vue logo" src="../assets/logo.png" />
+        <img alt="Vue logo"
+             src="../assets/logo.png" />
         <hello-world></hello-world>
     </div>
 </template>
@@ -11,10 +12,10 @@ import HelloWorld from '../components/hello-world/Index.vue';
 export default {
     name: 'Home',
     components: {
-        HelloWorld
+        HelloWorld,
     },
     mounted() {
         console.log('hello');
-    }
+    },
 };
 </script>
