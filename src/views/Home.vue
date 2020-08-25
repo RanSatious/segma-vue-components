@@ -1,21 +1,21 @@
 <template>
-    <div class="home">
+    <div class="home-page">
         <img alt="Vue logo"
              src="../assets/logo.png" />
-        <hello-world></hello-world>
+        <h2>Segma Vue Component Library</h2>
     </div>
 </template>
 
 <script>
-import HelloWorld from '../components/hello-world/Index.vue';
-
 export default {
-    name: 'Home',
-    components: {
-        HelloWorld,
-    },
+    name: 'HomePage',
     mounted() {
         console.log('hello');
     },
 };
 </script>
+<style lang="less" scoped>
+.home-page {
+    text-align: center;
+}
+</style>
