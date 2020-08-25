@@ -4,6 +4,7 @@
     "description": "vue component collection of segma frontend team",
     "main": "dist/index.cjs.js",
     "module": "dist/index.esm.js",
+    "types": "types/index.d.ts",
     "files": [
         "dist"
     ],

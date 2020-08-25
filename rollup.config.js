@@ -12,5 +12,6 @@ export default {
             format: 'es'
         }
     ],
+    external: ['vue'],
     plugins: [vue()]
 };

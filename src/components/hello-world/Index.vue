@@ -1,9 +1,15 @@
 <template>
-    <div class="hello-world">HelloWorld</div>
+    <div class="hello-world">{{msg}}</div>
 </template>
 <script>
 export default {
-    name: 'HelloWorld'
+    name: 'SeHelloWorld',
+    props: {
+        msg: {
+            type: String,
+            default: 'hello world',
+        },
+    },
 };
 </script>
 <style lang="less" scoped>
