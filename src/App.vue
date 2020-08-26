@@ -5,11 +5,17 @@
 </template>
 
 <style lang="less">
+@import './assets/css/scroll.less';
+
 html,
 body {
     padding: 0;
     margin: 0;
     height: 100%;
+}
+
+div {
+    .scroll-bar();
 }
 
 #app {

@@ -6,6 +6,7 @@
 </template>
 <script>
 export default {
+    // HelloWorld组件
     name: 'SeHelloWorld',
     props: {
         msg: {

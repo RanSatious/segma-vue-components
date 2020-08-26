@@ -9,7 +9,7 @@ const componentDir = path.resolve('src', 'components');
 
 async function build() {
     await fs.ensureDir(docDir);
-    await fs.emptyDir(docDir);
+    // await fs.emptyDir(docDir);
 
     const components = await fs.readdir(componentDir);
 
@@ -23,8 +23,10 @@ async function build() {
 
         let content = '';
         for (const name of list.filter(d => d.endsWith('.vue'))) {
-            content += render(parse(path.join(componentDir, component, name)));
+            content += render(parse(path.join(componentDir, component, name)), component);
             content += '\n';
+
+            console.log(`generating document of ${path.join(component, name)}`);
         }
 
         await fs.writeFile(path.join(docDir, `${component}.md`), content.replace(/\n/g, os.EOL));

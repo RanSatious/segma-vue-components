@@ -70,8 +70,11 @@ export default {
             background-color: #f7f7f7;
 
             .content-wrapper {
+                box-sizing: border-box;
+                padding: 10px;
                 background-color: white;
                 height: 100%;
+                overflow: auto;
             }
         }
     }
