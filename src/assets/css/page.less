@@ -1,12 +1,66 @@
-.section-code {
-    > div {
-        padding: 10px;
-        border: 1px solid #ebebeb;
-        border-radius: 4px;
-        transition: all 0.5s;
+@import './scroll.less';
 
-        &:hover {
-            box-shadow: 0 0 8px 0 rgba(232, 237, 250, 0.6), 0 2px 4px 0 rgba(232, 237, 250, 0.5);
-        }
+div {
+    .scroll-bar();
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+}
+
+a {
+    color: rgba(0, 0, 0, 0.85);
+    text-decoration: none;
+    transition: all 0.2s;
+
+    &.router-link-active,
+    &:hover {
+        color: #41b883;
     }
+}
+
+.section-code {
+    border: 1px solid #ebebeb;
+    border-radius: 4px;
+    transition: all 0.5s;
+
+    .source {
+        padding: 20px;
+    }
+
+    &:hover {
+        box-shadow: 0 0 8px 0 rgba(232, 237, 250, 0.6), 0 2px 4px 0 rgba(232, 237, 250, 0.5);
+    }
+}
+
+.toggle {
+    height: 40px;
+    border-top: 1px solid #ebebeb;
+    transition: all 0.5s;
+    cursor: pointer;
+    line-height: 40px;
+    text-align: center;
+
+    &:hover {
+        color: #41b883;
+        background-color: #f9fafc;
+    }
+}
+
+pre {
+    margin: 0;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+code {
+    font-family: Menlo, Monaco, Consolas, Courier, monospace;
+    font-size: 12px;
 }

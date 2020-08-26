@@ -15,7 +15,9 @@
         "doc": "node build/doc.js"
     },
     "dependencies": {
+        "@segma/segma-ui": "^2.3.24",
         "core-js": "^3.6.5",
+        "highlight.js": "^10.1.2",
         "lodash": "^4.17.20",
         "vue": "^2.6.12",
         "vue-router": "^3.4.3"

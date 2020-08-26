@@ -9,6 +9,8 @@
 import doc from '../../../docs/hello-world.md';
 import convert from '../../../build/convert';
 import DemoBasic from './DemoBasic.vue';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css';
 
 export default {
     name: 'HelloWorldPage',
@@ -24,6 +26,9 @@ export default {
         this.doc = await convert(doc);
         this.$nextTick(() => {
             document.querySelector('#hello-world-Basic').appendChild(this.$refs.basic.$el);
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightBlock(block);
+            });
         });
     },
 };

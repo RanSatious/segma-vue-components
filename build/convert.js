@@ -21,10 +21,14 @@ const handlers = {
         let props = {};
 
         if (lang) {
-            props.className = ['language-' + lang];
+            props.className = ['language-' + lang, 'hljs'];
         }
 
-        return h(node.position, 'section', [h(node, 'div', { id: id.shift(), className: 'section-code' }), h(node, 'pre', [h(node, 'code', props, [u('text', value)])])]);
+        return h(node.position, 'section', { className: 'section-code' }, [
+            h(node, 'div', { id: id.shift(), className: 'source' }),
+            h(node, 'pre', { style: 'height: 0;' }, [h(node, 'code', props, [u('text', value)])]),
+            h(node, 'div', { className: 'toggle' }, [h(node, 'i', { className: 'iconfont se-icon-arrow-down' })]),
+        ]);
     },
 };
 
