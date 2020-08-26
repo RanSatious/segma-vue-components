@@ -1,14 +1,13 @@
 <template>
     <div class="page">
-        <demo-basic></demo-basic>
+        <demo-basic ref="basic"></demo-basic>
         <div class="md" v-html="doc"></div>
     </div>
 </template>
 
 <script>
 import doc from '../../../docs/hello-world.md';
-import remark from 'remark';
-import html from 'remark-html';
+import convert from '../../../build/convert';
 import DemoBasic from './DemoBasic.vue';
 
 export default {
@@ -22,11 +21,10 @@ export default {
         };
     },
     async mounted() {
-        let root = remark().parse(doc);
-        console.log(remark().use(html).parse(doc));
-        let result = await remark().use(html).process(remark().stringify(root));
-        console.log(result);
-        this.doc = result.contents;
+        this.doc = await convert(doc);
+        this.$nextTick(() => {
+            document.querySelector('#hello-world-Basic').appendChild(this.$refs.basic.$el);
+        });
     },
 };
 </script>

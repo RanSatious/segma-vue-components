@@ -5,6 +5,7 @@
 </template>
 
 <style lang="less">
+@import './assets/css/page.less';
 @import './assets/css/scroll.less';
 
 html,
