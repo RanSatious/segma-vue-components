@@ -13,7 +13,13 @@ const handlers = {
             id.push(node.children[0].value.trim());
             node.children.splice(0, 1);
         }
-        return h(node, 'h' + node.depth, {}, all(h, node));
+
+        let url = node.children[0].url;
+        let props = {};
+        if (url) {
+            props.id = url.replace('#', '').trim();
+        }
+        return h(node, 'h' + node.depth, props, all(h, node));
     },
     code(h, node) {
         let value = node.value || '';

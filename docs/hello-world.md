@@ -2,7 +2,7 @@
 
 HelloWorld组件
 
-## hello-world-Basic [基本用法](#基本用法)
+## hello-world-basic [基本用法](#基本用法)
 
 ```vue
 <template>
@@ -11,12 +11,21 @@ HelloWorld组件
 
 ```
 
-## hello-world-Test [基本用法2](#基本用法2)
+## hello-world-test [基本用法2](#基本用法2)
 
 ```vue
 <template>
-    <se-hello-world></se-hello-world>
+    <se-hello-world @click="test">123</se-hello-world>
 </template>
+<script>
+export default {
+    methods: {
+        test() {
+            console.log(test);
+        },
+    },
+};
+</script>
 
 ```
 

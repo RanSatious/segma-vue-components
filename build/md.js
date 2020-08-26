@@ -1,6 +1,7 @@
 // 将解析好的组件信息转换成markdown文档
 const path = require('path');
 const fs = require('fs-extra');
+const lodash = require('lodash');
 
 function renderName({ name, description }) {
     description = (description || '').split('\n');
@@ -70,7 +71,7 @@ function renderDemos(component, name) {
             let matches = firstLine.match(/^\<\!--(.*)--\>$/);
 
             let title = file.replace('Demo', '').replace('.vue', '');
-            let id = `${name}-${title}`;
+            let id = `${name}-${lodash.kebabCase(title)}`;
             if (matches) {
                 content = content.substring(content.indexOf('\n') + 1);
                 title = matches[1].trim();

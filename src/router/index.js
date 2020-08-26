@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import DefaultLayout from '../layouts/Default.vue';
+import * as meta from './meta';
 
 Vue.use(VueRouter);
 
@@ -22,10 +23,14 @@ const routes = [
             {
                 path: '/hello-world',
                 name: 'helloWorld',
-                component: () => import('../views/hello-world/Index.vue'),
-                meta: {
-                    title: 'Hello World',
-                },
+                component: () => import('../layouts/Demo.vue'),
+                meta: meta.helloWorld,
+            },
+            {
+                path: '/button',
+                name: 'button',
+                component: () => import('../layouts/Demo.vue'),
+                meta: meta.button,
             },
         ],
     },
