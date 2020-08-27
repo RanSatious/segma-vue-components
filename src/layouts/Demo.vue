@@ -66,18 +66,3 @@ export default {
     },
 };
 </script>
-<style lang="less" scoped>
-.md {
-    white-space: pre-wrap;
-}
-</style>
-<style lang="less">
-table {
-    border-collapse: collapse;
-    th,
-    td {
-        padding: 10px;
-        border: 1px solid gray;
-    }
-}
-</style>

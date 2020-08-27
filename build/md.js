@@ -3,6 +3,13 @@ const path = require('path');
 const fs = require('fs-extra');
 const lodash = require('lodash');
 
+const fieldMap = {
+    name: '参数',
+    type: '类型',
+    default: '默认值',
+    description: '说明',
+};
+
 function renderName({ name, description }) {
     description = (description || '').split('\n');
     return [`# ${name}`, ...description].filter(d => d).join('\n\n');
@@ -20,7 +27,7 @@ function renderTable(data, title, columns) {
         if (index === 0) {
             total += '|';
         }
-        total += ` ${current} |`;
+        total += ` ${fieldMap[current] || current} |`;
         return total;
     }, '');
 
@@ -44,7 +51,7 @@ function renderTable(data, title, columns) {
 }
 
 function renderProps({ props }) {
-    return renderTable(props, '属性', ['name', 'type', 'default', 'description']);
+    return renderTable(props, '属性', ['name', 'description', 'type', 'default']);
 }
 
 function renderEvents({ events }) {

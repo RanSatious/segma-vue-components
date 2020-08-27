@@ -86,6 +86,7 @@ export default {
                 'se-icon-f-delete',
                 'se-icon-delete',
                 'se-icon-f-camera',
+                'se-icon-f-camera1',
                 'se-icon-f-message',
                 'se-icon-message',
                 'se-icon-f-comment',

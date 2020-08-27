@@ -31,12 +31,12 @@ export default {
 
 ## [属性](#属性)
 
-| name | type | default | description |
+| 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| msg | String | hello world | - |
+| msg | - | String | hello world |
 
 ## [事件](#事件)
 
-| name | description |
+| 参数 | 说明 |
 |---|---|
 | test | - |

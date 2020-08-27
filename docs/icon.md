@@ -113,6 +113,7 @@ export default {
                 'se-icon-f-delete',
                 'se-icon-delete',
                 'se-icon-f-camera',
+                'se-icon-f-camera1',
                 'se-icon-f-message',
                 'se-icon-message',
                 'se-icon-f-comment',
@@ -162,14 +163,12 @@ export default {
 </script>
 <style lang="less" scoped>
 .icon-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: table;
 
     li {
+        float: left;
         box-sizing: border-box;
         width: 20%;
-        flex-shrink: 0;
         text-align: center;
         padding: 10px;
         transition: all 0.3s;
@@ -180,6 +179,9 @@ export default {
 
         span {
             display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         &:hover {

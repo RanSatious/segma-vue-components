@@ -2,6 +2,7 @@ import button from '../../docs/button.md';
 import helloWorld from '../../docs/hello-world.md';
 import progressBar from '../../docs/progress-bar.md';
 import icon from '../../docs/icon.md';
+import iconFont from '../../docs/icon-font.md';
 
 export default [
     {
@@ -15,6 +16,12 @@ export default [
         doc: icon,
         name: 'icon',
         section: ['basic', 'list'],
+    },
+    {
+        title: 'IconFont SVG图标',
+        doc: iconFont,
+        name: 'icon-font',
+        section: ['basic'],
     },
     {
         title: 'Button 按钮',
