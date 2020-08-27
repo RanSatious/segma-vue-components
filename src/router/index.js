@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import DefaultLayout from '../layouts/Default.vue';
-import * as meta from './meta';
+import meta from './meta';
+import camelCase from 'lodash/camelCase';
 
 Vue.use(VueRouter);
 
@@ -20,18 +21,12 @@ const routes = [
                     title: '首页',
                 },
             },
-            {
-                path: '/hello-world',
-                name: 'helloWorld',
+            ...meta.map(d => ({
+                path: `/${d.name}`,
+                name: camelCase(d.name),
                 component: () => import('../layouts/Demo.vue'),
-                meta: meta.helloWorld,
-            },
-            {
-                path: '/button',
-                name: 'button',
-                component: () => import('../layouts/Demo.vue'),
-                meta: meta.button,
-            },
+                meta: d,
+            })),
         ],
     },
 ];

@@ -3,7 +3,7 @@ const fs = require('fs-extra');
 const os = require('os');
 const { parse } = require('./parser');
 const { render } = require('./md');
-const external = require('./external');
+const external = require('../src/components/external');
 
 const docDir = path.join('docs');
 const componentDir = path.resolve('src', 'components');
