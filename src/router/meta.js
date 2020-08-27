@@ -22,4 +22,10 @@ export default [
         name: 'button',
         section: ['basic', 'disable', 'group', 'icon', 'loading', 'text'],
     },
+    {
+        title: 'ProgressBar 进度条',
+        doc: progressBar,
+        name: 'progress-bar',
+        section: ['basic'],
+    },
 ];
