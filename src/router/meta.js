@@ -3,6 +3,7 @@ import helloWorld from '../../docs/hello-world.md';
 import progressBar from '../../docs/progress-bar.md';
 import icon from '../../docs/icon.md';
 import iconFont from '../../docs/icon-font.md';
+import tableAction from '../../docs/table-action.md';
 
 export default [
     {
@@ -28,6 +29,12 @@ export default [
         doc: button,
         name: 'button',
         section: ['basic', 'disable', 'group', 'icon', 'loading', 'text'],
+    },
+    {
+        title: 'TableAction 表格操作列',
+        doc: tableAction,
+        name: 'table-action',
+        section: ['basic'],
     },
     {
         title: 'ProgressBar 进度条',

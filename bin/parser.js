@@ -1,9 +1,10 @@
 // 解析vue文件，得到组件的name，props，events, slots 信息。
 const fs = require('fs');
 const compiler = require('vue-template-compiler');
-const { parse: vueParse, compileTemplate } = require('@vue/component-compiler-utils');
+const { parse: vueParse } = require('@vue/component-compiler-utils');
 const { parse: babelParse } = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
+const parse5 = require('parse5');
 
 function parseSfcFile(path, options) {
     const source = fs.readFileSync(path, { encoding: 'utf-8' });
@@ -15,32 +16,46 @@ function parseSfcFile(path, options) {
 }
 
 function parseTemplate(source) {
-    const result = compileTemplate({
-        source,
-        compiler,
-    });
-
     const slots = [];
+    const html = parse5.parse(source.replace(/\n\s*/g, ''));
 
     const loop = node => {
-        if (node.tag === 'slot') {
-            let title = node.attrsList.find(d => d.name === 'title');
+        if (node.tagName === 'slot') {
+            let slot = {};
+            let nameAttr = node.attrs.find(d => ['name', ':name'].includes(d.name));
+            let title = nameAttr ? nameAttr.value : 'default';
+            slot.name = title.replace(/["']/g, '');
+            if (nameAttr && nameAttr.name.includes(':')) {
+                try {
+                    // todo: is this dangerous?
+                    eval(title);
+                    slot.dynamic = false;
+                } catch (e) {
+                    slot.dynamic = true;
+                }
+            } else {
+                slot.dynamic = false;
+            }
+
+            // 说明
+            let index = node.parentNode.childNodes.indexOf(node);
+            let prev = node.parentNode.childNodes[index - 1];
+            if (prev && prev.nodeName === '#comment') {
+                slot.description = prev.data.trim();
+            }
+
             // todo: 作用域插槽
-            slots.push({
-                name: (node.slotName || 'default').replace(/"/g, ''),
-                description: title ? title.value : '',
-            });
+
+            slots.push(slot);
         }
-        if (node.children) {
-            node.children.forEach(loop);
+        if (node.childNodes) {
+            node.childNodes.forEach(loop);
+        }
+        if (node.content && node.content.childNodes) {
+            node.content.childNodes.forEach(loop);
         }
     };
-    loop(result.ast);
-
-    // 遍历 template.ast.children 可以得到 slot
-    // 条件：tag = slot
-    // 插槽名称： slotName，默认插槽的slotName为undefined
-
+    loop(html);
     return slots;
 }
 

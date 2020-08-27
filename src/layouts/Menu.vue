@@ -34,6 +34,7 @@ export default {
         text-decoration: none;
         color: rgba(0, 0, 0, 0.85);
         transition: all 0.3s;
+        line-height: 30px;
 
         &.router-link-active,
         &:hover {

@@ -15,7 +15,7 @@ function renderName({ name, description }) {
     return [`# ${name}`, ...description].filter(d => d).join('\n\n');
 }
 
-function renderTable(data, title, columns) {
+function renderTable(data, title, columns, callback = (data, key) => data[key]) {
     if (!data.length) {
         return;
     }
@@ -41,7 +41,7 @@ function renderTable(data, title, columns) {
                 total += '|';
             }
 
-            let content = (prop[current] || '-').toString().replace(/\n/g, '<br/>');
+            let content = (callback(prop, current) || '-').toString().replace(/\n/g, '<br/>');
             total += ` ${content} |`;
             return total;
         }, '');
@@ -51,7 +51,13 @@ function renderTable(data, title, columns) {
 }
 
 function renderProps({ props }) {
-    return renderTable(props, '属性', ['name', 'description', 'type', 'default']);
+    return renderTable(props, '属性', ['name', 'description', 'type', 'default'], (prop, key) => {
+        let result = prop[key];
+        if (key === 'default' && result && typeof result === 'object') {
+            result = JSON.stringify(result);
+        }
+        return result;
+    });
 }
 
 function renderEvents({ events }) {
@@ -59,7 +65,13 @@ function renderEvents({ events }) {
 }
 
 function renderSlots({ slots }) {
-    return renderTable(slots, '插槽', ['name', 'description']);
+    return renderTable(slots, '插槽', ['name', 'description'], (data, key) => {
+        let result = data[key];
+        if (key === 'name' && data.dynamic) {
+            result += ' `动态`';
+        }
+        return result;
+    });
 }
 
 function renderDemos(component, name) {
