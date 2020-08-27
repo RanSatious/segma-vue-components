@@ -31,7 +31,7 @@ export default {
                 return [];
             }
             return this.section.map(name => ({
-                component: () => import(`../views/${this.name}/Demo${this.startCase(name)}.vue`),
+                component: () => import(/* webpackChunkName: "demo" */ `../views/${this.name}/Demo${this.startCase(name)}.vue`),
                 name: name,
             }));
         },
