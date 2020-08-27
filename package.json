@@ -14,7 +14,7 @@
         "report": "vue-cli-service build --report",
         "pack": "rollup --config",
         "lint": "vue-cli-service lint",
-        "doc": "node build/doc.js"
+        "doc": "node bin/doc.js"
     },
     "dependencies": {
         "@segma/segma-ui": "^2.3.24",

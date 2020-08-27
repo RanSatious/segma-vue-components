@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import convert from '../../build/convert';
+import convert from '../../bin/convert';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 
