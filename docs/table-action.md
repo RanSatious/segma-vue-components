@@ -25,8 +25,8 @@ export default {};
 
 ## [插槽](#插槽)
 
-| 参数 | 说明 |
-|---|---|
-| prefix | 头部插槽 |
-| item.slot `动态` | 动态插槽 |
-| suffix | 尾部插槽 |
+| name | scope | 说明 |
+|---|---|---|
+| prefix | - | 头部插槽 |
+| [item.slot] `动态` | - | 动态插槽<br/>在**actions**中配置 |
+| suffix | - | 尾部插槽 |

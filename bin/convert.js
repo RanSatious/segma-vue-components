@@ -6,6 +6,10 @@ import stringify from 'rehype-stringify';
 import u from 'unist-builder';
 import all from 'mdast-util-to-hast/lib/all';
 
+function collapse(value) {
+    return String(value).replace(/\s+/g, ' ');
+}
+
 const id = [];
 const handlers = {
     heading(h, node) {
@@ -35,6 +39,15 @@ const handlers = {
             h(node, 'pre', { style: 'height: 0;' }, [h(node, 'code', props, [u('text', value)])]),
             h(node, 'div', { className: 'toggle' }, [h(node, 'i', { className: 'iconfont se-icon-arrow-down' })]),
         ]);
+    },
+    inlineCode(h, node) {
+        return h(node, 'code', { className: 'inline-code' }, [u('text', collapse(node.value))]);
+    },
+    strong(h, node) {
+        return h(node, 'strong', { className: 'strong-text' }, all(h, node));
+    },
+    html(h, node) {
+        return h.augment(node, u('text', '\n'));
     },
 };
 

@@ -3,19 +3,12 @@ const path = require('path');
 const fs = require('fs-extra');
 const lodash = require('lodash');
 
-const fieldMap = {
-    name: '参数',
-    type: '类型',
-    default: '默认值',
-    description: '说明',
-};
-
 function renderName({ name, description }) {
     description = (description || '').split('\n');
     return [`# ${name}`, ...description].filter(d => d).join('\n\n');
 }
 
-function renderTable(data, title, columns, callback = (data, key) => data[key]) {
+function renderTable(data, title, columns, callback = (data, key) => data[key.name]) {
     if (!data.length) {
         return;
     }
@@ -27,7 +20,7 @@ function renderTable(data, title, columns, callback = (data, key) => data[key]) 
         if (index === 0) {
             total += '|';
         }
-        total += ` ${fieldMap[current] || current} |`;
+        total += ` ${current.text} |`;
         return total;
     }, '');
 
@@ -51,27 +44,49 @@ function renderTable(data, title, columns, callback = (data, key) => data[key]) 
 }
 
 function renderProps({ props }) {
-    return renderTable(props, '属性', ['name', 'description', 'type', 'default'], (prop, key) => {
-        let result = prop[key];
-        if (key === 'default' && result && typeof result === 'object') {
-            result = JSON.stringify(result);
+    return renderTable(
+        props,
+        '属性',
+        [
+            { name: 'name', text: '参数' },
+            { name: 'description', text: '说明' },
+            { name: 'type', text: '类型' },
+            { name: 'default', text: '默认值' },
+        ],
+        (prop, key) => {
+            let result = prop[key.name];
+            if (key.name === 'default' && result && typeof result === 'object') {
+                result = JSON.stringify(result);
+            }
+            return result;
         }
-        return result;
-    });
+    );
 }
 
 function renderEvents({ events }) {
-    return renderTable(events, '事件', ['name', 'description']);
+    return renderTable(events, '事件', [
+        { name: 'name', text: '名称' },
+        { name: 'description', text: '说明' },
+    ]);
 }
 
 function renderSlots({ slots }) {
-    return renderTable(slots, '插槽', ['name', 'description'], (data, key) => {
-        let result = data[key];
-        if (key === 'name' && data.dynamic) {
-            result += ' `动态`';
+    return renderTable(
+        slots,
+        '插槽',
+        [
+            { name: 'name', text: 'name' },
+            { name: 'scope', text: 'scope' },
+            { name: 'description', text: '说明' },
+        ],
+        (data, key) => {
+            let result = data[key.name];
+            if (key.name === 'name' && data.dynamic) {
+                result += ' `动态`';
+            }
+            return result;
         }
-        return result;
-    });
+    );
 }
 
 function renderDemos(component, name) {

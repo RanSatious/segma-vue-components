@@ -4,6 +4,7 @@
         <slot :name="'prefix'"></slot>
         <template v-for="(item, index) in actions">
             <!-- 动态插槽 -->
+            <!-- 在**actions**中配置 -->
             <slot v-if="item.slot"
                   :name="item.slot"></slot>
             <span v-else-if="item.icon"

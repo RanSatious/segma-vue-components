@@ -21,7 +21,7 @@ function parseTemplate(source) {
 
     const loop = node => {
         if (node.tagName === 'slot') {
-            let slot = {};
+            let slot = { name: '', description: '' };
             let nameAttr = node.attrs.find(d => ['name', ':name'].includes(d.name));
             let title = nameAttr ? nameAttr.value : 'default';
             slot.name = title.replace(/["']/g, '');
@@ -32,6 +32,7 @@ function parseTemplate(source) {
                     slot.dynamic = false;
                 } catch (e) {
                     slot.dynamic = true;
+                    slot.name = `[${slot.name}]`;
                 }
             } else {
                 slot.dynamic = false;
@@ -39,9 +40,16 @@ function parseTemplate(source) {
 
             // 说明
             let index = node.parentNode.childNodes.indexOf(node);
-            let prev = node.parentNode.childNodes[index - 1];
-            if (prev && prev.nodeName === '#comment') {
-                slot.description = prev.data.trim();
+            while (index > 0) {
+                let prev = node.parentNode.childNodes[index - 1];
+                if (prev.nodeName !== '#comment') {
+                    break;
+                }
+                if (slot.description) {
+                    slot.description = '\n' + slot.description;
+                }
+                slot.description = prev.data.trim() + slot.description;
+                index--;
             }
 
             // todo: 作用域插槽
