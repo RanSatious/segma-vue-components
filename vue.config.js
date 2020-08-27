@@ -1,4 +1,5 @@
 module.exports = {
+    outputDir: 'build',
     configureWebpack: {
         module: {
             rules: [

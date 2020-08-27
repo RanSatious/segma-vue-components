@@ -5,13 +5,13 @@ export default {
     output: [
         {
             file: 'dist/index.cjs.js',
-            format: 'cjs'
+            format: 'cjs',
         },
         {
             file: 'dist/index.esm.js',
-            format: 'es'
-        }
+            format: 'es',
+        },
     ],
     external: ['vue'],
-    plugins: [vue()]
+    plugins: [vue()],
 };
