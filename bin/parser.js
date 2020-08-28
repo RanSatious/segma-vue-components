@@ -52,7 +52,18 @@ function parseTemplate(source) {
                 index--;
             }
 
-            // todo: 作用域插槽
+            const getScopeProp = name => {
+                name = name.replace(':', '');
+                if (['class', 'name', 'style'].includes(name)) {
+                    return '';
+                }
+                if (['@', 'v-'].some(d => name.startsWith(d))) {
+                    return '';
+                }
+                return `**${name}**`;
+            };
+            let attrs = node.attrs.map(d => getScopeProp(d.name)).filter(d => d);
+            slot.scope = attrs.join(', ');
 
             slots.push(slot);
         }
