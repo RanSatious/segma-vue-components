@@ -32,13 +32,13 @@ export default {
             type: Number,
             default: 0,
         },
-        // 进度条宽度
+        // 进度条状态
         // normal/success/error/running
         status: {
             type: String,
             default: 'normal',
         },
-        // 进度条大小
+        // 进度条宽度
         strokeHeight: {
             type: Number,
             default: 6,

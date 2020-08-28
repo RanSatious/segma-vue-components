@@ -48,8 +48,8 @@
 |---|---|---|---|
 | percent | 百分比 | Number | 0 |
 | offset | 起始位置偏移 | Number | 0 |
-| status | 进度条宽度<br/>normal/success/error/running | String | normal |
-| stroke-height | 进度条大小 | Number | 6 |
+| status | 进度条状态<br/>normal/success/error/running | String | normal |
+| stroke-height | 进度条宽度 | Number | 6 |
 | animation | 是否开启动画<br/>开启动画时，status固定为running | Boolean | false |
 | show-text | 是否显示文本 | Boolean | true |
 
