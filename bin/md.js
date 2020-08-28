@@ -58,7 +58,10 @@ function renderProps({ props }) {
             if (key.name === 'default' && result && typeof result === 'object') {
                 result = JSON.stringify(result);
             }
-            return result;
+            if (key.name === 'name') {
+                result = lodash.kebabCase(result);
+            }
+            return lodash.isNil(result) ? '-' : result.toString();
         }
     );
 }

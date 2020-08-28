@@ -251,7 +251,7 @@ export default {
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| actions | 定义操作<br/>`type?: 'primary'/'danger'` 操作类型，分普通和危险2种<br/>`title?: string` 名称<br/>`icon?: string` 图标<br/>`show?: boolean/scope => boolean` 是否显示该操作<br/>`disabled?: boolean/scope => boolean` 是否禁用该操作<br/>`slot?: string` 自定义插槽，使用之后其他属性无效 | Array | [] |
+| actions | 定义操作<br/>`type?: 'primary'/'danger'` 操作类型，分普通和危险2种<br/>`title?: string` 名称<br/>`icon?: string` 图标<br/>`show?: boolean/scope => boolean` 是否显示该操作<br/>`disabled?: boolean/scope => boolean` 是否禁用该操作<br/>`handler? scope => void` 点击事件回调<br/>`slot?: string` 自定义插槽，使用之后其他属性无效 | Array | [] |
 | scope | 传递父组件层级的数据到组件 | Object | {} |
 
 ## [插槽](#插槽)

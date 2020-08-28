@@ -9,9 +9,6 @@
 <script>
 export default {
     name: 'HomePage',
-    mounted() {
-        console.log('hello');
-    },
 };
 </script>
 <style lang="less" scoped>

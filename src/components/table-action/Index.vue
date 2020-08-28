@@ -44,6 +44,7 @@ export default {
         // `icon?: string` 图标
         // `show?: boolean/scope => boolean` 是否显示该操作
         // `disabled?: boolean/scope => boolean` 是否禁用该操作
+        // `handler? scope => void` 点击事件回调
         // `slot?: string` 自定义插槽，使用之后其他属性无效
         actions: {
             type: Array,

@@ -23,6 +23,13 @@ export default {
     components: {
         LayoutMenu,
     },
+    mounted() {
+        document.title = `${this.$route.meta.title} - Segma 组件库`;
+    },
+    beforeRouteUpdate(to, from, next) {
+        document.title = `${to.meta.title} - Segma 组件库`;
+        next();
+    },
 };
 </script>
 <style lang="less" scoped>
