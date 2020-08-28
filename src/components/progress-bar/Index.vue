@@ -63,7 +63,7 @@ export default {
             };
         },
         percentText() {
-            return `${this.percent || 0}%`;
+            return `${Math.max(0, Math.min(100, this.percent)) || 0}%`;
         },
         progressStyle() {
             if (this.animation) return {};
