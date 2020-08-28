@@ -60,7 +60,7 @@ function parseTemplate(source) {
                 if (['@', 'v-'].some(d => name.startsWith(d))) {
                     return '';
                 }
-                return `**${name}**`;
+                return `\`${name}\``;
             };
             let attrs = node.attrs.map(d => getScopeProp(d.name)).filter(d => d);
             slot.scope = attrs.join(', ');

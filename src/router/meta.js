@@ -34,7 +34,7 @@ export default [
         title: 'TableAction 表格操作列',
         doc: tableAction,
         name: 'table-action',
-        section: ['basic'],
+        section: ['basic', 'icon', 'show', 'disable', 'slot'],
     },
     {
         title: 'ProgressBar 进度条',

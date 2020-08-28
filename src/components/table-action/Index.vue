@@ -1,29 +1,30 @@
 <template>
-    <div class="table-action-button">
+    <div class="table-action">
         <!-- 头部插槽 -->
         <slot :name="'prefix'"></slot>
         <template v-for="(item, index) in actions">
             <!-- 动态插槽 -->
-            <!-- 在**actions**中配置 -->
+            <!-- 在`actions`中配置 -->
             <slot v-if="item.slot"
                   :name="item.slot"></slot>
             <span v-else-if="item.icon"
+                  v-show="isShow(item.show)"
                   :key="`icon_${index}`"
                   :title="isDisable(item.disabled) ? '' : item.title">
                 <icon-font :name="item.icon"
                            :class="[item.type, isDisable(item.disabled) ? 'disabled' : '']"
-                           @click.native="item.handler(scope)"></icon-font>
+                           @click.native="item.handler && item.handler(scope)"></icon-font>
             </span>
             <template v-else>
                 <span v-show="isShow(item.show)"
                       :key="`title_${index}`"
                       class="title"
                       :class="[item.type, isDisable(item.disabled) ? 'disabled' : '']"
-                      @click="item.handler(scope)">
+                      @click="item.handler && item.handler(scope)">
                     {{ item.title }}
                 </span>
             </template>
-            <span v-if="index < actions.length - 1"
+            <span v-if="index < showCount - 1"
                   v-show="isShow(item.show)"
                   :key="`span_${index}`"
                   class="divider"> </span>
@@ -37,16 +38,28 @@ export default {
     // 表格操作列组件
     name: 'TableAction',
     props: {
+        // 定义操作
+        // `type?: 'primary'/'danger'` 操作类型，分普通和危险2种
+        // `title?: string` 名称
+        // `icon?: string` 图标
+        // `show?: boolean/scope => boolean` 是否显示该操作
+        // `disabled?: boolean/scope => boolean` 是否禁用该操作
+        // `slot?: string` 自定义插槽，使用之后其他属性无效
         actions: {
             type: Array,
             default: () => [],
         },
+        // 传递父组件层级的数据到组件
         scope: {
             type: Object,
             default: () => ({}),
         },
     },
-
+    computed: {
+        showCount() {
+            return this.actions.filter(d => this.isShow(d.show)).length;
+        },
+    },
     methods: {
         isDisable(callback) {
             if (typeof callback !== 'function') {

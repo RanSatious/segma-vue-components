@@ -82,7 +82,7 @@ function renderSlots({ slots }) {
         (data, key) => {
             let result = data[key.name];
             if (key.name === 'name' && data.dynamic) {
-                result += ' `动态`';
+                result += ' **动态**';
             }
             return result;
         }

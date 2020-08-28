@@ -1,8 +1,7 @@
 <!-- 封装iconfont图标 -->
 <template>
-    <span class="icon-wrapper">
-        <svg class="icon"
-             aria-hidden="true">
+    <span class="icon">
+        <svg aria-hidden="true">
             <use :xlink:href="`#${name}`"></use>
         </svg>
     </span>
@@ -25,10 +24,12 @@ export default {
 <style lang="less"
        scoped>
 .icon {
-    overflow: hidden;
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.15em;
-    fill: currentColor;
+    svg {
+        overflow: hidden;
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+    }
 }
 </style>

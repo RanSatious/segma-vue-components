@@ -1,4 +1,4 @@
-<!-- 基本用法 -->
+<!-- 禁用状态 -->
 <template>
     <el-table :data="tableData">
         <el-table-column prop="name"
@@ -14,6 +14,11 @@
 </template>
 <script>
 export default {
+    data() {
+        return {
+            disabled: false,
+        };
+    },
     computed: {
         tableData() {
             return [{ name: 'tom' }];
@@ -21,24 +26,22 @@ export default {
         actions() {
             return [
                 {
-                    title: '查看',
+                    title: this.disabled ? '恢复' : '禁用',
                     type: 'primary',
-                    handler({ row, $index }) {
-                        console.log(row, $index);
-                    },
-                },
-                {
-                    title: '编辑',
-                    type: 'primary',
-                    handler({ row, $index }) {
-                        console.log(row, $index);
+                    handler: ({ row, $index }) => {
+                        this.disabled = !this.disabled;
                     },
                 },
                 {
                     title: '删除',
                     type: 'danger',
-                    handler({ row, $index }) {
-                        console.log(row, $index);
+                    disabled: this.disabled,
+                },
+                {
+                    title: '删除',
+                    type: 'danger',
+                    disabled: ({ row, $index }) => {
+                        return this.disabled;
                     },
                 },
             ];

@@ -1,4 +1,4 @@
-<!-- 基本用法 -->
+<!-- 使用图标 -->
 <template>
     <el-table :data="tableData">
         <el-table-column prop="name"
@@ -21,21 +21,14 @@ export default {
         actions() {
             return [
                 {
-                    title: '查看',
+                    icon: 'se-icon-zidingyi',
                     type: 'primary',
                     handler({ row, $index }) {
                         console.log(row, $index);
                     },
                 },
                 {
-                    title: '编辑',
-                    type: 'primary',
-                    handler({ row, $index }) {
-                        console.log(row, $index);
-                    },
-                },
-                {
-                    title: '删除',
+                    icon: 'se-icon-f-delete',
                     type: 'danger',
                     handler({ row, $index }) {
                         console.log(row, $index);

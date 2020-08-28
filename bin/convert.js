@@ -47,7 +47,10 @@ const handlers = {
         return h(node, 'strong', { className: 'strong-text' }, all(h, node));
     },
     html(h, node) {
-        return h.augment(node, u('text', '\n'));
+        if (node.value === '<br/>') {
+            return h.augment(node, u('text', '\n'));
+        }
+        return h.dangerous ? h.augment(node, u('raw', node.value)) : null;
     },
 };
 

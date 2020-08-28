@@ -61,7 +61,10 @@ export default {
             return value ? value[0].toUpperCase() + value.substring(1) : '';
         },
         onMounted(item) {
-            document.querySelector(`#${this.name}-${item.name}`).appendChild(this.$refs[item.name][0].$el);
+            let container = document.querySelector(`#${this.name}-${item.name}`);
+            if (container) {
+                container.appendChild(this.$refs[item.name][0].$el);
+            }
         },
     },
 };

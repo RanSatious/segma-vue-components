@@ -1,4 +1,4 @@
-<!-- 基本用法 -->
+<!-- 显示/隐藏 -->
 <template>
     <el-table :data="tableData">
         <el-table-column prop="name"
@@ -14,6 +14,11 @@
 </template>
 <script>
 export default {
+    data() {
+        return {
+            show: false,
+        };
+    },
     computed: {
         tableData() {
             return [{ name: 'tom' }];
@@ -21,24 +26,22 @@ export default {
         actions() {
             return [
                 {
-                    title: '查看',
+                    title: this.show ? '隐藏' : '显示',
                     type: 'primary',
-                    handler({ row, $index }) {
-                        console.log(row, $index);
-                    },
-                },
-                {
-                    title: '编辑',
-                    type: 'primary',
-                    handler({ row, $index }) {
-                        console.log(row, $index);
+                    handler: ({ row, $index }) => {
+                        this.show = !this.show;
                     },
                 },
                 {
                     title: '删除',
                     type: 'danger',
-                    handler({ row, $index }) {
-                        console.log(row, $index);
+                    show: this.show,
+                },
+                {
+                    title: '删除',
+                    type: 'danger',
+                    show: ({ row, $index }) => {
+                        return this.show;
                     },
                 },
             ];
