@@ -10,7 +10,7 @@
     ],
     "scripts": {
         "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build",
+        "build": "npm run doc && vue-cli-service build",
         "report": "vue-cli-service build --report",
         "pack": "rollup --config",
         "lint": "vue-cli-service lint",
