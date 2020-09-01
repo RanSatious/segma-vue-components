@@ -7,7 +7,7 @@ const { render } = require('./md');
 const categories = ['components', 'directives', 'services', 'mixins'];
 const fileMap = {
     components: ['vue'],
-    directives: ['js'],
+    directives: ['index.js'],
     mixins: ['js'],
     services: ['js'],
 };
@@ -37,7 +37,7 @@ async function build() {
 
             let content = '';
             if (external) {
-                content += render(component, key);
+                content += render(component, category, key);
                 console.log(`[external] ${component.name}`);
             } else {
                 let stat = await fs.stat(path.join(dir, key));
@@ -56,6 +56,7 @@ async function build() {
                         parse(path.join(dir, key, name), {
                             category,
                         }),
+                        category,
                         key
                     );
                     content += '\n';

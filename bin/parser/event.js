@@ -9,15 +9,21 @@ module.exports = (script, raw) => {
             if (callee.object && callee.object.type === 'ThisExpression' && callee.property.name === '$emit') {
                 let name = args[0].value;
                 let event = result.find(d => d.name === name);
+
+                let comment = getComments(path.parent.leadingComments, raw);
+                let ignore = comment.tags.find(d => d.tag === 'ignore');
+                if (ignore) {
+                    return;
+                }
+
                 if (!event) {
                     event = { name: args[0].value, description: '', param: [] };
                     result.push(event);
                 }
                 if (!event.description) {
-                    let result = getComments(path.parent.leadingComments, raw);
-                    if (result) {
-                        event.description = result.description;
-                        event.param = result.tags.filter(d => d.tag === 'param');
+                    if (comment) {
+                        event.description = comment.description;
+                        event.param = comment.tags.filter(d => d.tag === 'param');
                     }
                 }
             }

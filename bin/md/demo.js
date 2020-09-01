@@ -2,8 +2,8 @@ const path = require('path');
 const fs = require('fs-extra');
 const lodash = require('lodash');
 
-module.exports = (component, name) => {
-    const demoDir = path.resolve('src', 'views', name);
+module.exports = (component, category, name) => {
+    const demoDir = path.resolve('src', 'views', category, name);
     fs.ensureDirSync(demoDir);
     const files = fs.readdirSync(demoDir);
 

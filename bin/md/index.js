@@ -8,9 +8,9 @@ const computed = require('./computed');
 const mixin = require('./mixin');
 const data = require('./data');
 
-function render(component, title) {
+function render(component, category, title) {
     return [name, demo, prop, mixin, data, computed, event, slot]
-        .map(d => d(component, title))
+        .map(d => d(component, category, title))
         .filter(d => d)
         .join('\n\n');
 }

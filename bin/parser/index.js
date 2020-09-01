@@ -151,13 +151,24 @@ function parseComponent(rawContent, { category }) {
         component.description = result.description;
     }
 
-    // props
-    result = parseProp(
-        declaration.properties.find(d => d.key.name === 'props'),
-        rawContent
-    );
-    if (result) {
-        component.props.push(...result);
+    if (['components', 'mixins'].includes(category)) {
+        // props
+        result = parseProp(
+            declaration.properties.find(d => d.key.name === 'props'),
+            rawContent
+        );
+        if (result) {
+            component.props.push(...result);
+        }
+
+        // events
+        result = parseEvent(script, rawContent);
+        if (result) {
+            component.events.push(...result);
+        }
+
+        // sync
+        parseSync(component);
     }
 
     if (category === 'mixins') {
@@ -190,15 +201,6 @@ function parseComponent(rawContent, { category }) {
 
         // methods
     }
-
-    // events
-    result = parseEvent(script, rawContent);
-    if (result) {
-        component.events.push(...result);
-    }
-
-    // sync
-    parseSync(component);
 
     return component;
 }
