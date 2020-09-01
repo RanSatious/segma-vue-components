@@ -1,10 +1,21 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import DefaultLayout from '../layouts/Default.vue';
-import meta from './meta';
+import { RouteType } from './constant';
 import camelCase from 'lodash/camelCase';
+import component from './component';
+import directive from './directive';
+import service from './service';
+import mixin from './mixin';
 
 Vue.use(VueRouter);
+
+const toRoute = meta => ({
+    path: meta.type === RouteType.Default ? `/${meta.name}` : `/${meta.type}/${meta.name}`,
+    name: camelCase(meta.name),
+    component: () => import('../layouts/Demo.vue'),
+    meta,
+});
 
 const routes = [
     {
@@ -19,14 +30,13 @@ const routes = [
                 component: () => import('../views/Home.vue'),
                 meta: {
                     title: '首页',
+                    type: RouteType.Default,
                 },
             },
-            ...meta.map(d => ({
-                path: `/${d.name}`,
-                name: camelCase(d.name),
-                component: () => import('../layouts/Demo.vue'),
-                meta: d,
-            })),
+            ...component.map(toRoute),
+            ...directive.map(toRoute),
+            ...service.map(toRoute),
+            ...mixin.map(toRoute),
         ],
     },
 ];

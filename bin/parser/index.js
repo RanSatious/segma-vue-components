@@ -1,18 +1,39 @@
-// 解析vue文件，得到组件的name，props，events, slots 信息。
+// 解析vue文件，得到组件的name，props，events, slots 等信息。
 const fs = require('fs');
+const path = require('path');
 const compiler = require('vue-template-compiler');
 const { parse: vueParse } = require('@vue/component-compiler-utils');
 const { parse: babelParse } = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const parse5 = require('parse5');
+const parseName = require('./name');
+const parseProp = require('./prop');
+const parseEvent = require('./event');
+const parseComputed = require('./computed');
+const parseSync = require('./sync');
+const parseMixin = require('./mixin');
+const parseData = require('./data');
 
-function parseSfcFile(path, options) {
-    const source = fs.readFileSync(path, { encoding: 'utf-8' });
-    return vueParse({
+function parseSfcFile(filePath, options) {
+    const ext = path.extname(filePath);
+    if (['.js'].includes(ext)) {
+        let script = fs.readFileSync(filePath, { encoding: 'utf-8' });
+        return {
+            script,
+        };
+    }
+
+    const source = fs.readFileSync(filePath, { encoding: 'utf-8' });
+    let { template, script, styles } = vueParse({
         source,
         compiler,
         needMap: false,
     });
+    return {
+        template: template.content,
+        script: script.content,
+        styles,
+    };
 }
 
 function parseTemplate(source) {
@@ -78,7 +99,7 @@ function parseTemplate(source) {
     return slots;
 }
 
-function parseComponent(rawContent) {
+function parseComponent(rawContent, { category }) {
     const script = babelParse(rawContent, {
         sourceType: 'module',
     });
@@ -86,62 +107,98 @@ function parseComponent(rawContent) {
     const component = {
         name: '',
         description: '',
+        data: [],
         props: [],
         events: [],
+        computed: [],
+        mixins: [],
+        slots: [],
+        methods: [],
     };
 
-    let componentNode;
+    let declaration;
     traverse(script, {
         ExportDefaultDeclaration(path) {
-            componentNode = path.node;
-        },
-        CallExpression(path) {
-            const { arguments: args, callee } = path.node;
-            if (callee.object && callee.object.type === 'ThisExpression' && callee.property.name === '$emit') {
-                let name = args[0].value;
-                let event = component.events.find(d => d.name === name);
-                if (!event) {
-                    event = { name: args[0].value };
-                    component.events.push(event);
-                }
-                if (!event.description) {
-                    event.description = (path.parent.leadingComments || []).map(d => d.value).join('\n');
-                }
-            }
+            declaration = path.node.declaration;
         },
     });
 
-    if (!componentNode) {
+    if (!declaration.properties) {
+        traverse(script, {
+            VariableDeclaration(path) {
+                if (declaration.properties) {
+                    return;
+                }
+                let item = path.node.declarations.find(d => d.id.name === declaration.name);
+                if (item) {
+                    declaration.properties = item.init.properties;
+                }
+            },
+        });
+    }
+
+    if (!declaration.properties) {
         throw new Error('invalid vue component without a default export');
     }
 
     // name
-    const nameNode = componentNode.declaration.properties.find(d => d.key.name === 'name');
-    if (nameNode) {
-        component.name = eval(`(${rawContent.substring(nameNode.value.start, nameNode.value.end)})`);
-        component.description = nameNode.leadingComments && nameNode.leadingComments.map(d => d.value.trim()).join('\n');
+    let result = parseName(
+        declaration.properties.find(d => d.key.name === 'name'),
+        rawContent
+    );
+    if (result) {
+        component.name = result.name;
+        component.description = result.description;
     }
 
     // props
-    const propNode = componentNode.declaration.properties.find(d => d.key.name === 'props');
-    if (propNode) {
-        propNode.value.properties.forEach(node => {
-            // todo: 展开运算符
-            if (node.type === 'ObjectProperty') {
-                let prop = { name: node.key.name, type: null, default: '', description: '' };
-                // todo: 从其他文件引入的属性
-                if (node.value.type === 'ObjectExpression') {
-                    let info = eval(`(${rawContent.substring(node.value.start, node.value.end)})`);
-                    prop.type = Array.isArray(info.type) ? info.type.map(d => d.name).join() : info.type.name;
-                    prop.default = typeof info.default === 'function' ? info.default() : info.default;
-                }
-                if (node.leadingComments) {
-                    prop.description = node.leadingComments.map(d => d.value.trim()).join('\n');
-                }
-                component.props.push(prop);
-            }
-        });
+    result = parseProp(
+        declaration.properties.find(d => d.key.name === 'props'),
+        rawContent
+    );
+    if (result) {
+        component.props.push(...result);
     }
+
+    if (category === 'mixins') {
+        // data
+        result = parseData(
+            declaration.properties.find(d => d.key.name === 'data'),
+            rawContent
+        );
+        if (result) {
+            component.data.push(...result);
+        }
+
+        // computed
+        result = parseComputed(
+            declaration.properties.find(d => d.key.name === 'computed'),
+            rawContent
+        );
+        if (result) {
+            component.computed.push(...result);
+        }
+
+        // mixin
+        result = parseMixin(
+            declaration.properties.find(d => d.key.name === 'mixins'),
+            rawContent
+        );
+        if (result) {
+            component.mixins.push(...result);
+        }
+
+        // methods
+    }
+
+    // events
+    result = parseEvent(script, rawContent);
+    if (result) {
+        component.events.push(...result);
+    }
+
+    // sync
+    parseSync(component);
 
     return component;
 }
@@ -149,13 +206,17 @@ function parseComponent(rawContent) {
 function parse(path, options) {
     const { template, script } = parseSfcFile(path);
 
-    // slot信息
-    const slots = parseTemplate(template.content);
-
     // 组件信息
-    const component = parseComponent(script.content);
+    const component = parseComponent(script, {
+        path,
+        ...options,
+    });
 
-    component.slots = slots;
+    if (template) {
+        // slot信息
+        const slots = parseTemplate(template);
+        component.slots = slots;
+    }
 
     return component;
 }

@@ -3,42 +3,73 @@ const fs = require('fs-extra');
 const os = require('os');
 const { parse } = require('./parser');
 const { render } = require('./md');
-const external = require('../src/components/external');
 
+const categories = ['components', 'directives', 'services', 'mixins'];
+const fileMap = {
+    components: ['vue'],
+    directives: ['js'],
+    mixins: ['js'],
+    services: ['js'],
+};
 const docDir = path.join('docs');
-const componentDir = path.resolve('src', 'components');
 
 async function build() {
     await fs.ensureDir(docDir);
-    // await fs.emptyDir(docDir);
 
-    const components = await (await fs.readdir(componentDir)).map(key => ({ key }));
-    components.push(...external);
+    for (const category of categories) {
+        await fs.ensureDir(path.resolve(docDir, category));
 
-    for (const item of components) {
-        const { key, external, ...component } = item;
+        const dir = path.resolve('src', category);
+        const items = await (await fs.readdir(dir)).map(key => ({ key }));
 
-        let content = '';
-        if (external) {
-            content += render(component, key);
-            console.log(`[external] generating document of ${component.name}`);
-        } else {
-            let stat = await fs.stat(path.join(componentDir, key));
-            if (!stat.isDirectory()) {
-                continue;
-            }
-
-            let list = await fs.readdir(path.join(componentDir, key));
-
-            for (const name of list.filter(d => d.endsWith('.vue'))) {
-                content += render(parse(path.join(componentDir, key, name)), key);
-                content += '\n';
-
-                console.log(`generating document of ${path.join(key, name)}`);
-            }
+        if (fs.existsSync(path.resolve('src', category, 'external.js'))) {
+            const external = require(`../src/${category}/external`);
+            items.push(...external);
         }
 
-        await fs.writeFile(path.join(docDir, `${key}.md`), content.replace(/\n/g, os.EOL));
+        if (items.length > 0) {
+            console.log(`generating document of ${category}`);
+            console.log(`----------------------------------`);
+        }
+
+        for (const item of items) {
+            const { key, external, ...component } = item;
+
+            let content = '';
+            if (external) {
+                content += render(component, key);
+                console.log(`[external] ${component.name}`);
+            } else {
+                let stat = await fs.stat(path.join(dir, key));
+                if (!stat.isDirectory()) {
+                    continue;
+                }
+
+                let list = await fs.readdir(path.join(dir, key));
+
+                list = list.filter(d => fileMap[category].some(ext => d.endsWith(ext)));
+                if (list.length > 0) {
+                    console.log(key);
+                }
+                for (const name of list) {
+                    content += render(
+                        parse(path.join(dir, key, name), {
+                            category,
+                        }),
+                        key
+                    );
+                    content += '\n';
+
+                    console.log(`  ${name}`);
+                }
+            }
+
+            await fs.writeFile(path.join(docDir, category, `${key}.md`), content.replace(/\n/g, os.EOL));
+        }
+
+        if (items.length > 0) {
+            console.log(`----------------------------------\n`);
+        }
     }
 }
 
