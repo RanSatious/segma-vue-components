@@ -14,6 +14,7 @@
 import convert from '../../bin/convert';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
+import { RouteType } from '../router/constant';
 
 export default {
     name: 'DemoPage',
@@ -30,8 +31,8 @@ export default {
             if (!this.name) {
                 return [];
             }
-            return this.section.map(name => ({
-                component: () => import(/* webpackChunkName: "demo" */ `../views/${this.name}/Demo${this.startCase(name)}.vue`),
+            return this.section.map(({ name, category }) => ({
+                component: () => import(/* webpackChunkName: "demo" */ `../views/${category}/${this.name}/Demo${this.startCase(name)}.vue`),
                 name: name,
             }));
         },
@@ -40,9 +41,18 @@ export default {
         '$route.meta': {
             immediate: true,
             handler(val) {
-                const { doc, section, name } = val;
+                const { doc, section, name, type } = val;
+                const map = {
+                    [RouteType.Component]: 'components',
+                    [RouteType.Directive]: 'directives',
+                    [RouteType.Mixin]: 'mixins',
+                    [RouteType.Service]: 'services',
+                };
                 this.doc = doc;
-                this.section = section;
+                this.section = section.map(name => ({
+                    name,
+                    category: map[type],
+                }));
                 this.name = name;
                 this.init();
             },
