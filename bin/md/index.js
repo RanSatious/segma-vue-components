@@ -7,9 +7,10 @@ const slot = require('./slot');
 const computed = require('./computed');
 const mixin = require('./mixin');
 const data = require('./data');
+const method = require('./method');
 
 function render(component, category, title) {
-    return [name, demo, prop, mixin, data, computed, event, slot]
+    return [name, demo, prop, mixin, data, computed, event, slot, method]
         .map(d => d(component, category, title))
         .filter(d => d)
         .join('\n\n');

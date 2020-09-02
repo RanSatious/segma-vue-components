@@ -8,8 +8,8 @@ const categories = ['components', 'directives', 'services', 'mixins'];
 const fileMap = {
     components: ['vue'],
     directives: ['index.js'],
-    mixins: ['js'],
-    services: ['js'],
+    mixins: ['index.js'],
+    services: ['index.js'],
 };
 const docDir = path.join('docs');
 
@@ -20,7 +20,7 @@ async function build() {
         await fs.ensureDir(path.resolve(docDir, category));
 
         const dir = path.resolve('src', category);
-        const items = await (await fs.readdir(dir)).map(key => ({ key }));
+        const items = (await fs.readdir(dir)).map(key => ({ key }));
 
         if (fs.existsSync(path.resolve('src', category, 'external.js'))) {
             const external = require(`../src/${category}/external`);

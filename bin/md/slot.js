@@ -1,6 +1,6 @@
 const renderTable = require('./table');
 
-module.exports = ({ slots }) => {
+module.exports = ({ slots = [] }) => {
     return renderTable(
         slots,
         '插槽(Slots)',

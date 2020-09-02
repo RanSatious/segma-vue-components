@@ -6,6 +6,8 @@ const { parse: vueParse } = require('@vue/component-compiler-utils');
 const { parse: babelParse } = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const parse5 = require('parse5');
+const lodash = require('lodash');
+const getComments = require('./comment');
 const parseName = require('./name');
 const parseProp = require('./prop');
 const parseEvent = require('./event');
@@ -13,8 +15,9 @@ const parseComputed = require('./computed');
 const parseSync = require('./sync');
 const parseMixin = require('./mixin');
 const parseData = require('./data');
+const parseMethod = require('./method');
 
-function parseSfcFile(filePath, options) {
+function parseSourceFile(filePath, options) {
     const ext = path.extname(filePath);
     if (['.js'].includes(ext)) {
         let script = fs.readFileSync(filePath, { encoding: 'utf-8' });
@@ -99,27 +102,17 @@ function parseTemplate(source) {
     return slots;
 }
 
-function parseComponent(rawContent, { category }) {
+function parseDefaultExport(rawContent) {
     const script = babelParse(rawContent, {
         sourceType: 'module',
     });
 
-    const component = {
-        name: '',
-        description: '',
-        data: [],
-        props: [],
-        events: [],
-        computed: [],
-        mixins: [],
-        slots: [],
-        methods: [],
-    };
-
     let declaration;
+    let comments;
     traverse(script, {
         ExportDefaultDeclaration(path) {
             declaration = path.node.declaration;
+            comments = path.node.leadingComments;
         },
     });
 
@@ -132,14 +125,35 @@ function parseComponent(rawContent, { category }) {
                 let item = path.node.declarations.find(d => d.id.name === declaration.name);
                 if (item) {
                     declaration.properties = item.init.properties;
+                    if (item.leadingComments) {
+                        comments = item.leadingComments;
+                    }
                 }
             },
         });
     }
 
     if (!declaration.properties) {
-        throw new Error('invalid vue component without a default export');
+        throw new Error('invalid source code without a default export');
     }
+
+    return { script, declaration, comments };
+}
+
+function parseComponent(rawContent, { category }) {
+    const component = {
+        name: '',
+        description: '',
+        data: [],
+        props: [],
+        events: [],
+        computed: [],
+        mixins: [],
+        slots: [],
+        methods: [],
+    };
+
+    let { script, declaration } = parseDefaultExport(rawContent);
 
     // name
     let result = parseName(
@@ -151,25 +165,23 @@ function parseComponent(rawContent, { category }) {
         component.description = result.description;
     }
 
-    if (['components', 'mixins'].includes(category)) {
-        // props
-        result = parseProp(
-            declaration.properties.find(d => d.key.name === 'props'),
-            rawContent
-        );
-        if (result) {
-            component.props.push(...result);
-        }
-
-        // events
-        result = parseEvent(script, rawContent);
-        if (result) {
-            component.events.push(...result);
-        }
-
-        // sync
-        parseSync(component);
+    // props
+    result = parseProp(
+        declaration.properties.find(d => d.key.name === 'props'),
+        rawContent
+    );
+    if (result) {
+        component.props.push(...result);
     }
+
+    // events
+    result = parseEvent(script, rawContent);
+    if (result) {
+        component.events.push(...result);
+    }
+
+    // sync
+    parseSync(component);
 
     if (category === 'mixins') {
         // data
@@ -205,22 +217,85 @@ function parseComponent(rawContent, { category }) {
     return component;
 }
 
-function parse(path, options) {
-    const { template, script } = parseSfcFile(path);
+function parseDirective(rawContent) {
+    const directive = {
+        name: '',
+        description: '',
+    };
 
-    // 组件信息
-    const component = parseComponent(script, {
-        path,
-        ...options,
-    });
+    let { declaration } = parseDefaultExport(rawContent);
 
-    if (template) {
-        // slot信息
-        const slots = parseTemplate(template);
-        component.slots = slots;
+    // name
+    let result = parseName(
+        declaration.properties.find(d => d.key.name === 'name'),
+        rawContent
+    );
+    if (result) {
+        directive.name = result.name;
+        directive.description = result.description;
     }
 
-    return component;
+    return directive;
+}
+
+function parseService(rawContent, { path: filePath }) {
+    const service = {
+        name: '',
+        description: '',
+        methods: [],
+        fields: [],
+    };
+
+    let { declaration, comments } = parseDefaultExport(rawContent);
+
+    let comment = getComments(comments, rawContent);
+    let tag = comment.tags.find(d => d.tag === 'name');
+    if (tag) {
+        service.name = tag.name;
+    } else {
+        const { camelCase, upperFirst } = lodash;
+        service.name = upperFirst(camelCase(filePath.split('\\').slice(-2)[0]));
+    }
+    service.description = comment.description;
+
+    // fields
+
+    // methods
+    result = parseMethod(declaration.properties, rawContent);
+    if (result) {
+        service.methods.push(...result.methods);
+        service.fields.push(...result.fields);
+    }
+
+    return service;
+}
+
+function parse(path, options) {
+    const { category } = options;
+    const { template, script } = parseSourceFile(path);
+    let result;
+
+    switch (category) {
+        case 'components':
+        case 'mixins':
+            result = parseComponent(script, {
+                path,
+                ...options,
+            });
+
+            if (template) {
+                const slots = parseTemplate(template);
+                result.slots = slots;
+            }
+            return result;
+        case 'directives':
+            return parseDirective(script);
+        case 'services':
+            return parseService(script, {
+                path,
+                ...options,
+            });
+    }
 }
 
 module.exports = {

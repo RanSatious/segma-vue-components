@@ -1,14 +1,15 @@
-const renderTable = require('./table');
 const lodash = require('lodash');
+const renderTable = require('./table');
 
-module.exports = ({ events = [] }) => {
+module.exports = ({ methods = [] }) => {
     return renderTable(
-        events,
-        '事件(Events)',
+        methods,
+        '方法(Methods)',
         [
-            { name: 'name', text: '名称' },
+            { name: 'name', text: '参数' },
             { name: 'description', text: '说明' },
             { name: 'param', text: '参数' },
+            { name: 'result', text: '返回值' },
         ],
         (prop, key) => {
             let result = prop[key.name];

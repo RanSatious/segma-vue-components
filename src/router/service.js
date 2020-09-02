@@ -1,11 +1,12 @@
 import { RouteType } from './constant';
+import message from '../../docs/services/message.md';
 
 export default [
     {
         title: 'Message 消息对话框',
         type: RouteType.Service,
-        doc: 'todo',
+        doc: message,
         name: 'message',
-        section: [],
+        section: ['basic', 'title', 'width', 'align', 'event', 'callback', 'button'],
     },
 ];

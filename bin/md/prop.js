@@ -1,7 +1,7 @@
 const lodash = require('lodash');
 const renderTable = require('./table');
 
-module.exports = ({ props }) => {
+module.exports = ({ props = [] }) => {
     return renderTable(
         props,
         '属性(Props)',

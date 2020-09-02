@@ -12,10 +12,10 @@ function Message(options) {
         align,
         className,
         callback,
-        width
+        width,
     });
     const instance = new Component({
-        data
+        data,
     });
     instance.$mount();
     instance.$on('open', () => {
@@ -58,11 +58,19 @@ function normalizeArgs(args) {
 
     return {
         message,
-        title
+        title,
     };
 }
 
+// 基于 el-dialog 的消息对话框服务
 export default {
+    /**
+     * 警告对话框
+     * @param {string} message 消息
+     * @param {string} title 标题
+     * @param {IMessageOption} options 其他参数
+     * @returns {Promise}
+     */
     alert(...args) {
         let options = normalizeArgs(args);
         options.title = options.title || '提示';
@@ -71,8 +79,8 @@ export default {
                 {
                     type: 'primary',
                     text: '确定',
-                    action: 'confirm'
-                }
+                    action: 'confirm',
+                },
             ];
         }
         if (!options.align) {
@@ -80,6 +88,13 @@ export default {
         }
         return Message(options);
     },
+    /**
+     * 确认对话框
+     * @param {string} message 消息
+     * @param {string} title 标题
+     * @param {IMessageOption} options 其他参数
+     * @returns {Promise}
+     */
     confirm(...args) {
         let options = normalizeArgs(args);
         options.title = options.title || '确认';
@@ -88,18 +103,18 @@ export default {
                 {
                     type: 'info',
                     text: '取消',
-                    action: 'cancel'
+                    action: 'cancel',
                 },
                 {
                     type: 'primary',
                     text: '确定',
-                    action: 'confirm'
-                }
+                    action: 'confirm',
+                },
             ];
         }
         if (!options.align) {
             options.align = 'right';
         }
         return Message(options);
-    }
+    },
 };
