@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
     frontend:
-        image: segma-vue-components:1.0.2
+        image: segma-vue-components:1.0.3
         container_name: segma-vue-components
         build:
             context: .
