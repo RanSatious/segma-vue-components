@@ -68,6 +68,15 @@ code {
 .md {
     white-space: pre-wrap;
 
+    h1 {
+        font-size: 36px;
+    }
+
+    h2 {
+        margin-top: 20px;
+        font-size: 18px;
+    }
+
     > table {
         border-collapse: collapse;
         width: 100%;
@@ -102,6 +111,18 @@ code {
         border-radius: 4px;
         display: inline-block;
         font-size: 14px;
+    }
+
+    blockquote {
+        background-color: #f7f7f7;
+        padding: 10px;
+        border-radius: 4px;
+
+        .inline-code {
+            background-color: initial;
+            color: #41b883;
+            font-weight: bold;
+        }
     }
 
     .strong-text {

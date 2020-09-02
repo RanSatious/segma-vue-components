@@ -125,6 +125,9 @@ function Title(container) {
 
                 if (POSITIONS.includes(position)) {
                     data.position = position;
+                    if (position === 'mouse') {
+                        data.delay = Math.max(500, data.delay);
+                    }
                 }
                 if (EFFECTS.includes(effect)) {
                     data.effect = effect;

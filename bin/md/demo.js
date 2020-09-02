@@ -14,16 +14,29 @@ module.exports = (component, category, name) => {
             let content = fs.readFileSync(path.resolve(demoDir, file), { encoding: 'utf-8' });
             content = content.replace(/\r\n/g, '\n');
 
-            let firstLine = content.substring(0, content.indexOf('\n'));
-            let matches = firstLine.match(/^\<\!--(.*)--\>$/);
+            let lines = content.split('\n');
+            let comments = [];
+            while (lines.length > 0) {
+                let line = lines[0];
+                let matches = line.match(/^\<\!--(.*)--\>$/);
+                if (!matches) {
+                    break;
+                }
+                comments.push(matches[1].trim());
+                lines.shift();
+            }
+            content = lines.join('\n');
 
             let title = file.replace('Demo', '').replace('.vue', '');
             let id = `${name}-${lodash.kebabCase(title)}`;
-            if (matches) {
-                content = content.substring(content.indexOf('\n') + 1);
-                title = matches[1].trim();
+            if (comments.length > 0) {
+                title = comments.shift();
             }
             codes.push(`## ${id} [${title}](#${title})`);
+
+            if (comments.length > 0) {
+                codes.push(comments.map(d => `> ${d}`).join('\n'));
+            }
 
             codes.push(['```vue', content, '```'].join('\n'));
         });

@@ -7,6 +7,6 @@ export default [
         type: RouteType.Directive,
         doc: title,
         name: 'title',
-        section: [],
+        section: ['basic', 'position', 'overflow', 'effect', 'delay', 'gap'],
     },
 ];
