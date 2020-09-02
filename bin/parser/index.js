@@ -1,6 +1,7 @@
 // 解析vue文件，得到组件的name，props，events, slots 等信息。
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const compiler = require('vue-template-compiler');
 const { parse: vueParse } = require('@vue/component-compiler-utils');
 const { parse: babelParse } = require('@babel/parser');
@@ -254,7 +255,8 @@ function parseService(rawContent, { path: filePath }) {
         service.name = tag.name;
     } else {
         const { camelCase, upperFirst } = lodash;
-        service.name = upperFirst(camelCase(filePath.split('\\').slice(-2)[0]));
+        const splitter = os.platform() === 'win32' ? '\\' : '/';
+        service.name = upperFirst(camelCase(filePath.split(splitter).slice(-2)[0]));
     }
     service.description = comment.description;
 
