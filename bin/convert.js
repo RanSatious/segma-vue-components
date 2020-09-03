@@ -37,14 +37,18 @@ const handlers = {
         let props = {};
 
         if (lang) {
+            lang = lang[0];
             props.className = ['language-' + lang, 'hljs'];
         }
 
-        return h(node.position, 'section', { className: 'section-code' }, [
-            h(node, 'div', { id: id.shift(), className: 'source' }),
-            h(node, 'pre', { style: 'height: 0;' }, [h(node, 'code', props, [u('text', value)])]),
-            h(node, 'div', { className: 'toggle' }, [h(node, 'i', { className: 'iconfont se-icon-arrow-down' })]),
-        ]);
+        if (lang === 'vue') {
+            return h(node.position, 'section', { className: 'section-code' }, [
+                h(node, 'div', { id: id.shift(), className: 'source' }),
+                h(node, 'pre', { style: 'height: 0;' }, [h(node, 'code', props, [u('text', value)])]),
+                h(node, 'div', { className: 'toggle' }, [h(node, 'i', { className: 'iconfont se-icon-arrow-down' })]),
+            ]);
+        }
+        return h(node.position, 'pre', [h(node, 'code', props, [u('text', value)])]);
     },
     inlineCode(h, node) {
         return h(node, 'code', { className: 'inline-code' }, [u('text', collapse(node.value))]);

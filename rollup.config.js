@@ -16,7 +16,7 @@ const getCategory = category => {
         input: `src/${category}/${item}/index.js`,
         output: [
             {
-                file: `lib/${category}/${item}.js`,
+                file: `lib/${item}.js`,
                 format: 'es',
             },
         ],
