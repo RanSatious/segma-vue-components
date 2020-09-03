@@ -2,11 +2,11 @@
     "name": "@segma/vue-components",
     "version": "0.1.0",
     "description": "vue component collection of segma frontend team",
-    "main": "dist/index.cjs.js",
-    "module": "dist/index.esm.js",
+    "main": "lib/index.cjs.js",
+    "module": "lib/index.esm.js",
     "types": "types/index.d.ts",
     "files": [
-        "dist"
+        "lib"
     ],
     "scripts": {
         "serve": "vue-cli-service serve",
@@ -34,6 +34,8 @@
     "devDependencies": {
         "@babel/parser": "^7.11.4",
         "@babel/traverse": "^7.11.0",
+        "@rollup/plugin-commonjs": "^15.0.0",
+        "@rollup/plugin-node-resolve": "^9.0.0",
         "@vue/cli-plugin-babel": "~4.5.4",
         "@vue/cli-plugin-eslint": "~4.5.4",
         "@vue/cli-plugin-router": "~4.5.4",

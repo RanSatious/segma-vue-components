@@ -139,22 +139,27 @@ function Title(container) {
     };
 }
 
+const directive = {
+    bind(el, { value }) {
+        let title = Title(el);
+        title.init(value);
+
+        el.vTitle = title;
+    },
+    componentUpdated(el, { value }) {
+        el.vTitle.setOption(value);
+    },
+    unbind(el) {
+        el.vTitle.destroy();
+        delete el.vTitle;
+    },
+};
+
 export default {
     // 文字提示
     name: 'title',
-    directive: {
-        bind(el, { value }) {
-            let title = Title(el);
-            title.init(value);
-
-            el.vTitle = title;
-        },
-        componentUpdated(el, { value }) {
-            el.vTitle.setOption(value);
-        },
-        unbind(el) {
-            el.vTitle.destroy();
-            delete el.vTitle;
-        },
+    directive,
+    install(Vue) {
+        Vue.directive('title', directive);
     },
 };

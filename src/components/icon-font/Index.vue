@@ -7,7 +7,7 @@
     </span>
 </template>
 <script>
-import './index';
+import './icon';
 
 export default {
     // SVG图标
@@ -21,8 +21,7 @@ export default {
     },
 };
 </script>
-<style lang="less"
-       scoped>
+<style lang="less" scoped>
 .icon {
     svg {
         overflow: hidden;
