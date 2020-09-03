@@ -1,5 +1,4 @@
 import button from '../../docs/components/button.md';
-import helloWorld from '../../docs/components/hello-world.md';
 import progressBar from '../../docs/components/progress-bar.md';
 import icon from '../../docs/components/icon.md';
 import iconFont from '../../docs/components/icon-font.md';
@@ -7,13 +6,6 @@ import tableAction from '../../docs/components/table-action.md';
 import { RouteType } from './constant';
 
 export default [
-    {
-        title: 'Hello World',
-        type: RouteType.Component,
-        doc: helloWorld,
-        name: 'hello-world',
-        section: ['basic', 'test'],
-    },
     {
         title: 'Icon 图标',
         type: RouteType.Component,
