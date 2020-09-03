@@ -27,9 +27,6 @@ export default {
             return Object.values(RouteType).filter(d => this.routes.find(r => r.meta.type === d));
         },
     },
-    mounted() {
-        console.log(this.$router);
-    },
 };
 </script>
 <style lang="less" scoped>
