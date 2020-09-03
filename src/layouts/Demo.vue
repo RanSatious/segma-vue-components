@@ -5,7 +5,8 @@
                    :key="item.name"
                    :ref="item.name"
                    @hook:mounted="onMounted(item)"></component>
-        <div class="md"
+        <div ref="md"
+             class="md"
              v-html="html"></div>
     </div>
 </template>
@@ -62,8 +63,53 @@ export default {
         async init() {
             this.html = await convert(this.doc);
             this.$nextTick(() => {
-                document.querySelectorAll('pre code').forEach(block => {
-                    hljs.highlightBlock(block);
+                let fragments = [];
+                let fragment = null;
+
+                for (let i = 0; i < this.$refs.md.children.length; i++) {
+                    let element = this.$refs.md.children[i];
+                    if (element.tagName === 'H2') {
+                        if (fragment) {
+                            fragments.push(fragment);
+                        }
+                        fragment = { name: element.dataset.section || element.innerText, value: document.createDocumentFragment() };
+                        fragment.value.appendChild(element);
+                        i--;
+                    } else if (fragment) {
+                        fragment.value.appendChild(element);
+                        i--;
+                    }
+                }
+
+                if (fragment) {
+                    fragments.push(fragment);
+                }
+
+                let { section } = this.$route.meta;
+                fragments.sort((a, b) => {
+                    let indexA = section.indexOf(a.name);
+                    let indexB = section.indexOf(b.name);
+                    if (indexA === indexB) {
+                        return 0;
+                    }
+                    if (indexA < 0) {
+                        return 1;
+                    }
+                    if (indexB < 0) {
+                        return -1;
+                    }
+
+                    return indexA - indexB;
+                });
+
+                fragments.forEach(item => {
+                    this.$refs.md.appendChild(item.value);
+                });
+
+                this.$nextTick(() => {
+                    document.querySelectorAll('pre code').forEach(block => {
+                        hljs.highlightBlock(block);
+                    });
                 });
             });
         },

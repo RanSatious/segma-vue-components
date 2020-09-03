@@ -13,8 +13,11 @@ function collapse(value) {
 const id = [];
 const handlers = {
     heading(h, node) {
+        let section = '';
         if (node.children.length > 1) {
-            id.push(node.children[0].value.trim());
+            section = node.children[0].value.trim();
+            id.push(section);
+            section = section.split('-').pop();
             node.children.splice(0, 1);
         }
 
@@ -22,6 +25,9 @@ const handlers = {
         let props = {};
         if (url) {
             props.id = url.replace('#', '').trim();
+        }
+        if (section) {
+            props['data-section'] = section;
         }
         return h(node, 'h' + node.depth, props, all(h, node));
     },
